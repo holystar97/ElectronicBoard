@@ -18,11 +18,12 @@
         android:background="#0000ff"
         >
 
-        <EditText
+        <TextView
+            android:id="@+id/maintext"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:text="Nice"
-            android:textSize="90dp" />
+            android:textSize="60sp" />
 
 
     </LinearLayout>
@@ -32,12 +33,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp">
 
-        <TextView
+        <EditText
+            android:id="@+id/edittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:background="#00ff00"
             android:text="Nice"
-            android:textSize="35dp"/>
+            android:textSize="35sp"/>
 
     </LinearLayout>
 
