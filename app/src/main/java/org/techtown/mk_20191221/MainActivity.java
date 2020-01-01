@@ -8,8 +8,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,9 +33,12 @@ public class MainActivity extends AppCompatActivity {
     Button text,back,blink,stop;
     EditText edit;
     TextView maintext;
-    Animation animationToLeft, animationToRight;
+    Animation animationToLeft, animationToRight,animationToLeftFirst,animationToRightFirst;
     Thread hi;
     boolean stopFlag =false;
+
+    AnimationSet animationSetLeft,animationSetRight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
         blink=(Button) findViewById(R.id.blink);
         stop=(Button) findViewById(R.id.stop);
 
+        FlowText FlowText=new FlowText();
+
         plus.setOnClickListener(new ButtonSizeChange());
         minus.setOnClickListener(new ButtonSizeChange());
-        right.setOnClickListener(new FlowText());
-        left.setOnClickListener(new FlowText());
+        right.setOnClickListener(FlowText);
+        left.setOnClickListener(FlowText);
         text.setOnClickListener(new ChangeColor());
         back.setOnClickListener(new ChangeColor());
         blink.setOnClickListener(new Blink());
@@ -65,16 +72,33 @@ public class MainActivity extends AppCompatActivity {
 
         edit.addTextChangedListener(new AddTextChange());
 
-        animationToLeft= new TranslateAnimation(450,-1200,0,0);
+
+        int locationX =maintext.getWidth();
+        int locationY = maintext.getHeight();
+
+        animationToLeftFirst = new TranslateAnimation(locationX/2,-800,0,0);
+        animationToLeftFirst.setDuration(6000);
+
+        animationToRightFirst = new TranslateAnimation(locationX/2,1200,0,0);
+        animationToRightFirst.setDuration(6000);
+
+        animationToLeft= new TranslateAnimation(1200,-800,0,0);
         animationToLeft.setDuration(12000);
         animationToLeft.setRepeatMode(Animation.RESTART);
         animationToLeft.setRepeatCount(Animation.INFINITE);
 
 
-        animationToRight= new TranslateAnimation(450,1200,0,0);
+        animationToRight= new TranslateAnimation(-800,1200,0,0);
         animationToRight.setDuration(12000);
         animationToRight.setRepeatMode(Animation.RESTART);
         animationToRight.setRepeatCount(Animation.INFINITE);
+
+        animationSetLeft = new AnimationSet(false);
+        animationSetRight = new AnimationSet(false);
+        animationSetLeft.addAnimation(animationToLeftFirst);
+        animationSetLeft.addAnimation(animationToLeft);
+        animationSetRight.addAnimation(animationToRightFirst);
+        animationSetRight.addAnimation(animationToRight);
 
     }
 
@@ -87,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
                 stopFlag=true;
+                maintext.clearAnimation();
+                maintext.setGravity(Gravity.CENTER);
+               // maintext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         }
     }
@@ -128,6 +155,12 @@ public class MainActivity extends AppCompatActivity {
                 hi.start();
             }
             else{
+                hi=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        maintext.setVisibility(View.VISIBLE);
+                    }
+                });
                 hi.interrupt();
                 maintext.setVisibility(View.VISIBLE);
                 stopFlag=false;
@@ -201,10 +234,12 @@ public class MainActivity extends AppCompatActivity {
             int id=view.getId();
             switch(id){
                 case R.id.left:
-                       maintext.setAnimation(animationToLeft);
+                    maintext.setGravity(Gravity.CENTER);
+                       maintext.startAnimation(animationSetLeft);
                     break;
                 case R.id.right:
-                    maintext.setAnimation(animationToRight);
+                    maintext.setGravity(Gravity.CENTER);
+                    maintext.startAnimation(animationSetRight);
                     break;
             }
 
