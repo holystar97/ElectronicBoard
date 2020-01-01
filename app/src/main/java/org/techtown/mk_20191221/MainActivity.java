@@ -1,5 +1,7 @@
 package org.techtown.mk_20191221;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Button minus;
     Button right;
     Button left;
-    Button text,back,blink,stop;
+    Button text,back,blink,stop,start;
     EditText edit;
     TextView maintext;
     Animation animationToLeft, animationToRight,animationToLeftFirst,animationToRightFirst;
@@ -57,9 +59,8 @@ public class MainActivity extends AppCompatActivity {
         tDefaultColor= ContextCompat.getColor(MainActivity.this,R.color.colorPrimary);
         blink=(Button) findViewById(R.id.blink);
         stop=(Button) findViewById(R.id.stop);
-
+        start=(Button) findViewById(R.id.start);
         FlowText FlowText=new FlowText();
-
         plus.setOnClickListener(new ButtonSizeChange());
         minus.setOnClickListener(new ButtonSizeChange());
         right.setOnClickListener(FlowText);
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         back.setOnClickListener(new ChangeColor());
         blink.setOnClickListener(new Blink());
         stop.setOnClickListener(new Stop());
-
+        start.setOnClickListener(new Start());
 
         edit.addTextChangedListener(new AddTextChange());
 
@@ -104,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    class Start implements  View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            Intent intent=new Intent(getApplicationContext(),BoardActivity.class);
+            String text=maintext.getText().toString();
+            intent.putExtra(Intent.EXTRA_TEXT,text);
+            startActivity(intent);
+        }
+    }
 
 
     class Stop implements  View.OnClickListener{
