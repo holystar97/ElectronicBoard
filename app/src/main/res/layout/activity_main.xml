@@ -11,6 +11,7 @@
     tools:context="org.techtown.mk_20191221.MainActivity">
 
     <LinearLayout
+        android:id="@+id/Linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"

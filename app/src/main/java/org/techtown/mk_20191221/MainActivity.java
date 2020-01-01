@@ -1,5 +1,6 @@
 package org.techtown.mk_20191221;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,15 +12,22 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MainActivity extends AppCompatActivity {
 
+    LinearLayout mLayout;
+    int mDefaultColor;
+    int tDefaultColor;
     int TextSize=6;
     Button plus;
     Button minus;
     Button right;
     Button left;
+    Button text,back;
     EditText edit;
     TextView maintext;
     Animation animationToLeft, animationToRight;
@@ -34,22 +42,29 @@ public class MainActivity extends AppCompatActivity {
         left=(Button) findViewById(R.id.left);
         maintext=(TextView) findViewById(R.id.maintext);
         edit=(EditText) findViewById(R.id.edittext);
+        text=(Button) findViewById(R.id.text);
+        back=(Button) findViewById(R.id.back);
+        mLayout=(LinearLayout)findViewById(R.id.Linear);
+        mDefaultColor= ContextCompat.getColor(MainActivity.this,R.color.colorPrimary);
+        tDefaultColor= ContextCompat.getColor(MainActivity.this,R.color.colorPrimary);
 
 
         plus.setOnClickListener(new ButtonSizeChange());
         minus.setOnClickListener(new ButtonSizeChange());
         right.setOnClickListener(new FlowText());
         left.setOnClickListener(new FlowText());
+        text.setOnClickListener(new ChangeColor());
+        back.setOnClickListener(new ChangeColor());
 
         edit.addTextChangedListener(new AddTextChange());
 
-        animationToLeft= new TranslateAnimation(600,-1200,0,0);
+        animationToLeft= new TranslateAnimation(450,-1200,0,0);
         animationToLeft.setDuration(12000);
         animationToLeft.setRepeatMode(Animation.RESTART);
         animationToLeft.setRepeatCount(Animation.INFINITE);
 
 
-        animationToRight= new TranslateAnimation(600,1200,0,0);
+        animationToRight= new TranslateAnimation(450,1200,0,0);
         animationToRight.setDuration(12000);
         animationToRight.setRepeatMode(Animation.RESTART);
         animationToRight.setRepeatCount(Animation.INFINITE);
@@ -59,6 +74,61 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    class ChangeColor implements  View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+
+            int id=view.getId();
+            openColorPicker(id);
+        }
+    }
+
+    public void openColorPicker(final int id){
+        AmbilWarnaDialog colorPicker =new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+
+
+
+                mDefaultColor=color;
+                tDefaultColor=color;
+                 switch(id){
+                    case R.id.text:
+                        maintext.setTextColor(tDefaultColor);
+                        break;
+                    case R.id.back:
+                        mLayout.setBackgroundColor(mDefaultColor);
+                        break;
+                }
+
+            }
+        });
+        colorPicker.show();
+    }
+
+
+    class ChangeTextColor implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            //AmbilWarnaDialog .Builder builder = new ColorPickerDialog.Builder(this);
+            //ColorPickerDialog.newBuilder().setDialogType(ColorPickerDialog.TYPE_PRESETS).show(this);
+        }
+    }
+
+
+
+
+
+
 
     class FlowText implements View.OnClickListener{
         @Override
