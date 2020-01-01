@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     EditText edit;
     TextView maintext;
     Animation animationToLeft, animationToRight;
+    Thread hi;
+    boolean stopFlag =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         text.setOnClickListener(new ChangeColor());
         back.setOnClickListener(new ChangeColor());
         blink.setOnClickListener(new Blink());
-        stop.setOnClickListener(new Blink());
+        stop.setOnClickListener(new Stop());
 
 
         edit.addTextChangedListener(new AddTextChange());
@@ -77,23 +79,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    public void nonblink(){
-//
-//    Thread thread =new PrintThread();
-//    thread.start();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    .interrupt();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
-
-
 
 
 
@@ -101,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-
-//            nonblink();
+                stopFlag=true;
 
         }
     }
@@ -110,38 +94,49 @@ public class MainActivity extends AppCompatActivity {
 
     class Blink implements View.OnClickListener{
 
-        public void blink(){
 
-            final Handler handler=new Handler();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int timeToBlink=500;
-                    try{
-                        Thread.sleep(timeToBlink);
-                    }catch(Exception e){}
+        public void blink() {
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            maintext=(TextView)findViewById(R.id.maintext);
-                            if(maintext.getVisibility()==View.VISIBLE){
-                                maintext.setVisibility(View.INVISIBLE);
-                            }else{
-                                maintext.setVisibility(View.VISIBLE);
-                            }
-                            blink();
+            final Handler handler = new Handler();
+
+
+            if (!stopFlag) {
+                hi = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int timeToBlink = 500;
+                        try {
+                            Thread.sleep(timeToBlink);
+                        } catch (Exception e) {
                         }
 
-                    });
-                }
-            }).start();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                maintext = (TextView) findViewById(R.id.maintext);
+                                if (maintext.getVisibility() == View.VISIBLE) {
+                                    maintext.setVisibility(View.INVISIBLE);
+                                } else {
+                                    maintext.setVisibility(View.VISIBLE);
+                                }
+                                blink();
+                            }
+
+                        });
+                    }
+                });
+                hi.start();
+            }
+            else{
+                hi.interrupt();
+                maintext.setVisibility(View.VISIBLE);
+                stopFlag=false;
+            }
         }
 
         @Override
         public void onClick(View view) {
             blink();
-
         }
 
     }
