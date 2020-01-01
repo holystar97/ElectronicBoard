@@ -1,5 +1,6 @@
 package org.techtown.mk_20191221;
 
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button minus;
     Button right;
     Button left;
-    Button text,back;
+    Button text,back,blink,stop;
     EditText edit;
     TextView maintext;
     Animation animationToLeft, animationToRight;
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         mLayout=(LinearLayout)findViewById(R.id.Linear);
         mDefaultColor= ContextCompat.getColor(MainActivity.this,R.color.colorPrimary);
         tDefaultColor= ContextCompat.getColor(MainActivity.this,R.color.colorPrimary);
-
+        blink=(Button) findViewById(R.id.blink);
+        stop=(Button) findViewById(R.id.stop);
 
         plus.setOnClickListener(new ButtonSizeChange());
         minus.setOnClickListener(new ButtonSizeChange());
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         left.setOnClickListener(new FlowText());
         text.setOnClickListener(new ChangeColor());
         back.setOnClickListener(new ChangeColor());
+        blink.setOnClickListener(new Blink());
+        stop.setOnClickListener(new Blink());
+
 
         edit.addTextChangedListener(new AddTextChange());
 
@@ -69,9 +74,75 @@ public class MainActivity extends AppCompatActivity {
         animationToRight.setRepeatMode(Animation.RESTART);
         animationToRight.setRepeatCount(Animation.INFINITE);
 
+    }
+
+
+//    public void nonblink(){
+//
+//    Thread thread =new PrintThread();
+//    thread.start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    .interrupt();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
 
 
+
+
+    class Stop implements  View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+
+//            nonblink();
+
+        }
+    }
+
+
+    class Blink implements View.OnClickListener{
+
+        public void blink(){
+
+            final Handler handler=new Handler();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int timeToBlink=500;
+                    try{
+                        Thread.sleep(timeToBlink);
+                    }catch(Exception e){}
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            maintext=(TextView)findViewById(R.id.maintext);
+                            if(maintext.getVisibility()==View.VISIBLE){
+                                maintext.setVisibility(View.INVISIBLE);
+                            }else{
+                                maintext.setVisibility(View.VISIBLE);
+                            }
+                            blink();
+                        }
+
+                    });
+                }
+            }).start();
+        }
+
+        @Override
+        public void onClick(View view) {
+            blink();
+
+        }
 
     }
 
@@ -95,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
-
-
 
                 mDefaultColor=color;
                 tDefaultColor=color;
