@@ -2,6 +2,7 @@ package org.techtown.mk_20191221;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     TextView maintext;
     Animation animationToLeft, animationToRight,animationToLeftFirst,animationToRightFirst;
     Thread hi;
+    Seekbar seekbar;
+    float totalsize;
     boolean stopFlag =false;
 
     AnimationSet animationSetLeft,animationSetRight;
@@ -112,7 +115,14 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent=new Intent(getApplicationContext(),BoardActivity.class);
             String text=maintext.getText().toString();
-            intent.putExtra(Intent.EXTRA_TEXT,text);
+            intent.putExtra("text",text);
+            int tcolor=tDefaultColor;
+            intent.putExtra("tcolor",tcolor);
+            int mcolor=mDefaultColor;
+            intent.putExtra("mcolor",mcolor);
+            float tsize=totalsize;
+            intent.putExtra("tsize",tsize);
+
             startActivity(intent);
         }
     }
@@ -207,13 +217,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
 
-                mDefaultColor=color;
-                tDefaultColor=color;
                  switch(id){
                     case R.id.text:
+                        tDefaultColor=color;
                         maintext.setTextColor(tDefaultColor);
                         break;
                     case R.id.back:
+                        mDefaultColor=color;
                         mLayout.setBackgroundColor(mDefaultColor);
                         break;
                 }
@@ -289,12 +299,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             int id=view.getId();
+
             switch(id){
                 case R.id.plus:
                     maintext.setTextSize(TypedValue.COMPLEX_UNIT_PX,maintext.getTextSize()+TextSize);
+                    totalsize=maintext.getTextSize()+TextSize;
                     break;
                 case R.id.minus:
                     maintext.setTextSize(TypedValue.COMPLEX_UNIT_PX,maintext.getTextSize()-TextSize);
+                    totalsize=maintext.getTextSize()-TextSize;
                     break;
             }
         }

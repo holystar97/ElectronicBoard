@@ -16,7 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BoardActivity"></activity>
+        <activity android:name=".BoardActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="landscape"
+            >
+
+
+
+        </activity>
     </application>
 
 </manifest>
